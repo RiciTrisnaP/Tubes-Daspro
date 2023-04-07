@@ -20,11 +20,16 @@ while True:
         login_status = logout(login_status=login_status)
         username = ""
     elif masukan == "summonjin":
-        new_username, new_password,role_jin = summonjin(users=users,username=username)
-        if new_username != "" and new_password != "" and role_jin != "":
-            users = add(users,[new_username,new_password,role_jin])
+        username_jin, password_jin,role_jin = summonjin(users=users,username=username)
+        if username_jin != "" and password_jin != "" and role_jin != "":
+            users = add(users,[username_jin,password_jin,role_jin])
     elif masukan == "ubahjin":
-        ubahjin(users=users,username=username)
+        username_jin,opsi_ganti_jenis_jin = ubahjin(users=users,username=username)
+        if username_jin != "" and opsi_ganti_jenis_jin != "":
+            for i in range(length(users)):
+                if username_jin == users[i][0]:
+                    index_jin = i
+            users[index_jin][2] = opsi_ganti_jenis_jin
     elif masukan == "users":
         print(users)
     else:

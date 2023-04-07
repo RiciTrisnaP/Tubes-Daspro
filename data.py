@@ -52,20 +52,20 @@ def summonjin(users,username):
         opsi_jenis_jin_angka = ["1","2"]
         if is_part_of(jenis_jin,opsi_jenis_jin_angka) == False:
             print(f'Tidak ada jenis jin yang bernomor "{jenis_jin}"')
-            new_username = ""
-            new_password = ""
+            username_jin = ""
+            password_jin = ""
             role_jin = ""
-            return new_username,new_password,role_jin
+            return username_jin,password_jin,role_jin
         else:
             print(f'Memilih jin "{opsi_jenis_jin[int(jenis_jin)-1]}"')
             role_jin = opsi_jenis_jin[int(jenis_jin)-1]
             loop = True
             while loop == True:
-                new_username = input("Masukkan username jin: ")
+                username_jin = input("Masukkan username jin: ")
                 counter = 0
                 for i in range(length(users)):
-                    if new_username == users[i][0]:
-                        print(f'Username "{new_username}" sudah diambil!')
+                    if username_jin == users[i][0]:
+                        print(f'Username "{username_jin}" sudah diambil!')
                     elif counter == length(users)-1:
                         loop = False
                     else:
@@ -73,37 +73,46 @@ def summonjin(users,username):
 
             loop = True
             while loop == True:
-                new_password = input("Masukkan password jin: ")
-                if length(new_password) < 5 or length(new_password) > 25:
+                password_jin = input("Masukkan password jin: ")
+                if length(password_jin) < 5 or length(password_jin) > 25:
                     print("Password panjangnya harus 5-25 karakter!")
                 else:
                     loop = False
-            return new_username,new_password,role_jin
+            return username_jin,password_jin,role_jin
         
     else:
         print("Maaf Anda tidak memiliki akses")
-        new_username = ""
-        new_password = ""
+        username_jin = ""
+        password_jin = ""
         role_jin = ""
-        return new_username,new_password,role_jin
+        return username_jin,password_jin,role_jin
 
 def hapusjin():
     pass
 
 def ubahjin(users,username):
     if username == "Bandung":
-        username = input("Masukkan username jin: ")
+        username_jin = input("Masukkan username jin: ")
         counter = 0
         for i in range(length(users)):
-            if username == users[i][0]:
+            if username_jin == users[i][0] and users[i][2] != "":
                 if users[i][2] == "Pengumpul":
                     opsi_ganti_jenis_jin = "Pembangun"
                 else:
                     opsi_ganti_jenis_jin = "Pengumpul"
                 print(f'Jin ini bertipe "{users[i][2]}". Yakin ingin mengubah ke tipe "{opsi_ganti_jenis_jin}" ')
                 konfirmasi = input("(Y/N)? ")
+                if konfirmasi == "Y":
+                    return username_jin,opsi_ganti_jenis_jin
+                else:
+                    username_jin = ""
+                    opsi_ganti_jenis_jin = ""
+                    return username_jin,opsi_ganti_jenis_jin
             elif counter == length(users)-1:
                 print("Tidak ada jin dengan username tersebut.")
+                username_jin = ""
+                opsi_ganti_jenis_jin = ""
+                return username_jin,opsi_ganti_jenis_jin
             else:
                 counter += 1
 
