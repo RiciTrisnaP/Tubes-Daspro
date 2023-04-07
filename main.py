@@ -30,6 +30,7 @@ while True:
                 if username_jin == users[i][0]:
                     index_jin = i
             users[index_jin][2] = opsi_ganti_jenis_jin
+            (print("Jin telah berhasil diubah."))
     elif masukan == "users":
         print(users)
     else:
