@@ -24,19 +24,20 @@ def csv_toarray(x,separator):
             last_index = 0
             i = 0
             for w in lines:
-                if w == separator and i != 0:
+                if j == files_length and w == separator and length(lines) == i+1:
+                    last_index = i
+                    sublist = add(sublist,lines[first_index:last_index])
+                    sublist = add(sublist,"")
+                elif w == separator:
                     last_index = i
                     sublist = add(sublist,lines[first_index:last_index])
                     first_index = last_index + 1
                     i += 1
-                elif w == separator and i == 0:
-                    first_index = 1
-                    i += 1
                 elif length(lines) == i+1:
-                    if j != files_length:
-                        last_index = i
-                    else:
+                    if j == files_length:
                         last_index = i+1
+                    else:
+                        last_index = i
                     sublist = add(sublist,lines[first_index:last_index])
                 else:
                     i += 1

@@ -1,12 +1,13 @@
 from Modules import *
 
+opsi_jenis_jin = ["Pengumpul","Pembangun"]
+
 def login(users,login_status,username):
     if login_status == False:
         username = input("Username: ")
         password = input("Password: ")
         is_username_true = False
         is_password_true = False
-        login_status = False
         username_index = 0
         for i in range(length(users)):
             if users[i][0] == username:
@@ -49,9 +50,12 @@ def summonjin(users,username):
 (2) Pembangun - Bertugas membangun candi""")
         jenis_jin = input("Masukkan nomor jenis jin yang ingin dipanggil: ")
         opsi_jenis_jin_angka = ["1","2"]
-        opsi_jenis_jin = ["Pengumpul","Pembangun"]
         if is_part_of(jenis_jin,opsi_jenis_jin_angka) == False:
             print(f'Tidak ada jenis jin yang bernomor "{jenis_jin}"')
+            new_username = ""
+            new_password = ""
+            role_jin = ""
+            return new_username,new_password,role_jin
         else:
             print(f'Memilih jin "{opsi_jenis_jin[int(jenis_jin)-1]}"')
             role_jin = opsi_jenis_jin[int(jenis_jin)-1]
@@ -74,8 +78,8 @@ def summonjin(users,username):
                     print("Password panjangnya harus 5-25 karakter!")
                 else:
                     loop = False
-
             return new_username,new_password,role_jin
+        
     else:
         print("Maaf Anda tidak memiliki akses")
         new_username = ""
@@ -86,8 +90,25 @@ def summonjin(users,username):
 def hapusjin():
     pass
 
-def ubahjin():
-    pass
+def ubahjin(users,username):
+    if username == "Bandung":
+        username = input("Masukkan username jin: ")
+        counter = 0
+        for i in range(length(users)):
+            if username == users[i][0]:
+                if users[i][2] == "Pengumpul":
+                    opsi_ganti_jenis_jin = "Pembangun"
+                else:
+                    opsi_ganti_jenis_jin = "Pengumpul"
+                print(f'Jin ini bertipe "{users[i][2]}". Yakin ingin mengubah ke tipe "{opsi_ganti_jenis_jin}" ')
+                konfirmasi = input("(Y/N)? ")
+            elif counter == length(users)-1:
+                print("Tidak ada jin dengan username tersebut.")
+            else:
+                counter += 1
+
+    else:
+        print("Maaf Anda tidak memiliki akses")
 
 def bangun():
     pass

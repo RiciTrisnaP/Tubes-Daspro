@@ -23,6 +23,8 @@ while True:
         new_username, new_password,role_jin = summonjin(users=users,username=username)
         if new_username != "" and new_password != "" and role_jin != "":
             users = add(users,[new_username,new_password,role_jin])
+    elif masukan == "ubahjin":
+        ubahjin(users=users,username=username)
     elif masukan == "users":
         print(users)
     else:
