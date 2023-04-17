@@ -1,123 +1,83 @@
 from Modules import *
+import sys
 
-opsi_jenis_jin = ["Pengumpul","Pembangun"]
-
-def login(users,login_status,username):
-    if login_status == False:
-        username = input("Username: ")
-        password = input("Password: ")
-        is_username_true = False
-        is_password_true = False
-        username_index = 0
-        for i in range(length(users)):
-            if users[i][0] == username:
-                is_username_true = True
-                username_index = i
-        for i in range(length(users)):
+def login(users,role):
+    username = input("Username: ")
+    password = input("Password: ")
+    for i in range(1,length(users)):
+        if users[i][0] == username:
             if users[i][1] == password:
-                is_password_true = True
-        if is_username_true and is_password_true:
-            login_status = True
-            print(f"Selamat datang, {users[username_index][0]}!")
-            print('Masukkan command "help" untuk daftar command yang dapat kamu panggil.')
-            return username,login_status
-        elif is_username_true == False:
-            print("Username tidak terdaftar")
-            username = ""
-            return username,login_status
-        else:
-            print("Password salah!")
-            username = ""
-            return username,login_status
-    else:
-        print("Anda sudah login, silakan logout terlebih dahulu")
-        return username,login_status
-    
+                role = users[i][2]
+                print(f"Selamat datang, {users[i][0]}!")
+                print('Masukkan command "help" untuk daftar command yang dapat kamu panggil.')
+                return username,role
+            else:
+                print("Password salah!")
+                return "",""
+    print("Username tidak terdaftar!")
+    return "",""
 
-def logout(login_status):
-    if login_status == True:
-        login_status = False
+def logout(role):
+    if role != "":
+        role = ""
         print("Keluar dari akun")
-        return login_status
+        return role
     else:
-        print("Maaf Anda belum login")
-        return login_status
+        print("Logout gagal!")
+        print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout")
+        return role
 
-def summonjin(users,username):
-    if username == "Bandung":
-        print("""Jenis jin yang dapat dipanggil:
+def summonjin(users):
+    print("""Jenis jin yang dapat dipanggil:
 (1) Pengumpul - Bertugas mengumpulkan bahan bangunan
 (2) Pembangun - Bertugas membangun candi""")
-        jenis_jin = input("Masukkan nomor jenis jin yang ingin dipanggil: ")
-        opsi_jenis_jin_angka = ["1","2"]
-        if is_part_of(jenis_jin,opsi_jenis_jin_angka) == False:
-            print(f'Tidak ada jenis jin yang bernomor "{jenis_jin}"')
-            username_jin = ""
-            password_jin = ""
-            role_jin = ""
-            return username_jin,password_jin,role_jin
-        else:
-            print(f'Memilih jin "{opsi_jenis_jin[int(jenis_jin)-1]}"')
-            role_jin = opsi_jenis_jin[int(jenis_jin)-1]
-            loop = True
-            while loop == True:
-                username_jin = input("Masukkan username jin: ")
-                counter = 0
-                for i in range(length(users)):
-                    if username_jin == users[i][0]:
-                        print(f'Username "{username_jin}" sudah diambil!')
-                    elif counter == length(users)-1:
-                        loop = False
-                    else:
-                        counter += 1
-
-            loop = True
-            while loop == True:
-                password_jin = input("Masukkan password jin: ")
-                if length(password_jin) < 5 or length(password_jin) > 25:
-                    print("Password panjangnya harus 5-25 karakter!")
-                else:
-                    loop = False
-            return username_jin,password_jin,role_jin
-        
+    jenis_jin = input("Masukkan nomor jenis jin yang ingin dipanggil: ")
+    opsi_jenis_jin_angka = ["1","2"]
+    opsi_jenis_jin = ["Pengumpul","Pembangun"]
+    if is_part_of(jenis_jin,opsi_jenis_jin_angka) == False:
+        print(f'Tidak ada jenis jin yang bernomor "{jenis_jin}"')
+        return users
     else:
-        print("Maaf Anda tidak memiliki akses")
-        username_jin = ""
-        password_jin = ""
-        role_jin = ""
-        return username_jin,password_jin,role_jin
+        print(f'Memilih jin "{opsi_jenis_jin[int(jenis_jin)-1]}"')
+        role_jin = opsi_jenis_jin[int(jenis_jin)-1]
 
+        username_jin = input("Masukkan username jin: ")
+        while validasi_username_1(users,username_jin) != True:
+            username_jin = input("Masukkan username jin: ")
+
+        password_jin = input("Masukkan password jin: ")
+        while validasi_password(password_jin) != True:
+            password_jin = input("Masukkan password jin: ")
+
+    users = add(users,[username_jin,password_jin,role_jin])
+    return users
+        
 def hapusjin():
     pass
 
-def ubahjin(users,username):
-    if username == "Bandung":
-        username_jin = input("Masukkan username jin: ")
-        counter = 0
-        for i in range(length(users)):
-            if username_jin == users[i][0] and users[i][2] != "":
-                if users[i][2] == "Pengumpul":
-                    opsi_ganti_jenis_jin = "Pembangun"
-                else:
-                    opsi_ganti_jenis_jin = "Pengumpul"
-                print(f'Jin ini bertipe "{users[i][2]}". Yakin ingin mengubah ke tipe "{opsi_ganti_jenis_jin}" ')
-                konfirmasi = input("(Y/N)? ")
-                if konfirmasi == "Y":
-                    return username_jin,opsi_ganti_jenis_jin
-                else:
-                    username_jin = ""
-                    opsi_ganti_jenis_jin = ""
-                    return username_jin,opsi_ganti_jenis_jin
-            elif counter == length(users)-1:
-                print("Tidak ada jin dengan username tersebut.")
-                username_jin = ""
-                opsi_ganti_jenis_jin = ""
-                return username_jin,opsi_ganti_jenis_jin
-            else:
-                counter += 1
-
+def ubahjin(users):
+    username_jin = input("Masukkan username jin: ")
+    is_valid,index_username_jin = validasi_username_2(users,username_jin)
+    if is_valid:
+        if users[index_username_jin][2] == "Pengumpul":
+            opsi_ganti_jenis_jin = "Pembangun"
+        else:
+            opsi_ganti_jenis_jin = "Pengumpul"
+        print(f'Jin ini bertipe "{users[index_username_jin][2]}". Yakin ingin mengubah ke tipe "{opsi_ganti_jenis_jin}" ')
+        konfirmasi = input("(Y/N)? ")
+        if konfirmasi == "Y":
+            users[index_username_jin][2] = opsi_ganti_jenis_jin
+            print("Jin telah berhasil diubah.")
+            return users
+        elif konfirmasi == "N":
+            print("Perubahan jin dibatalkan")
+            return users
+        else:
+            print("Perintah tidak dikenali, perubahan jin dibatalkan")
+            return users
     else:
-        print("Maaf Anda tidak memiliki akses")
+        print("Tidak ada jin dengan username tersebut.")
+        return users
 
 def bangun():
     pass
@@ -150,4 +110,4 @@ def help():
     pass
 
 def exit():
-    pass
+    sys.exit(1)

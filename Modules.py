@@ -58,3 +58,31 @@ def is_part_of(x,y):
             is_part_of = True
     return is_part_of
 
+def validasi_username_1(users,username):
+    for i in range(1,length(users)):
+        if username == users[i][0]:
+            print(f'Username "{username}" sudah diambil!')
+            return False
+    return True
+
+def validasi_password(password):
+    if length(password) < 5 or length(password) > 25:
+        print("Password panjangnya harus 5-25 karakter!")
+        return False
+    else:
+        return True
+
+def validasi_username_2(users,username):
+    for i in range(1,length(users)):
+        if username == users[i][0]:
+            index = i
+            return True,index
+    return False,""
+
+def hitung_jin(users):
+    jumlah_jin = 0
+    for i in range(1,length(users)):
+        opsi_jenis_jin = ["Pengumpul","Pembangun"]
+        if is_part_of(i,opsi_jenis_jin):
+            jumlah_jin += 1
+    return jumlah_jin
