@@ -1,21 +1,15 @@
-class geeks:
-    def __init__(self, name, roll):
-        self.name = name
-        self.roll = roll
- 
-# creating list
-list = []
- 
-# appending instances to list
-list.append(geeks('Akash', 2))
-list.append(geeks('Deependra', 40))
-list.append(geeks('Reaper', 44))
-list.append(geeks('veer', 67))
- 
-# Accessing object value using a for loop
-for obj in list:
-    print(obj.name, obj.roll, sep=' ')
- 
-print("")
-# Accessing individual elements
-print(list)
+def remove_at_index(list,index):
+    for i in range(index,len(list)-1):
+        list[i] = list[i+1]
+    list = remove_last(list)
+    return list
+
+def remove_last(x):
+    new_list = [0 for i in range(len(x)-1)]
+    for i in range(len(x)-1):
+        new_list[i] = x[i]
+    return new_list
+
+users = [['username', 'password', 'role'], ['Bandung', 'Bondowoso', 'Bandung_Bondowoso'], ['Roro', 'Jonggrang', 'Roro_Jonggrang'], ['Ifrit', 'Ifrit123', 'Pengumpul']]
+users = remove_at_index(users,3)
+print(users)

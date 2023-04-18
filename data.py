@@ -1,5 +1,7 @@
 from Modules import *
 import sys
+import os
+import argparse
 
 def login(users,role):
     username = input("Username: ")
@@ -52,9 +54,22 @@ def summonjin(users):
     users = add(users,[username_jin,password_jin,role_jin])
     return users
         
-def hapusjin():
-    pass
-
+def hapusjin(users):
+    username_jin = input("Masukkan username jin: ")
+    is_valid,index_username_jin = validasi_username_2(users,username_jin)
+    if is_valid:
+        konfirmasi = input(f"Apakah Anda yakin ingin menghapus jin dengan username {username_jin} (Y/N)?")
+        if konfirmasi == "Y":
+            users = remove_at_index(users,index_username_jin)
+            print("Jin telah berhasil dihapus dari alam gaib.")
+            return users
+        elif konfirmasi == "N":
+            print("Penghapusan jin dibatalkan")
+            return users
+    else:
+        print("Tidak ada jin dengan username tersebut.")
+        return users
+    
 def ubahjin(users):
     username_jin = input("Masukkan username jin: ")
     is_valid,index_username_jin = validasi_username_2(users,username_jin)
@@ -101,13 +116,91 @@ def ayamberkokok():
     pass
 
 def load():
-    pass
+    parser = argparse.ArgumentParser(usage="python main.py <nama_folder>") 
+    parser.add_argument("path")
+    if len(sys.argv)==1:
+        print("Tidak ada nama folder yang diberikan!")
+        sys.exit(1)
+    args=parser.parse_args()
 
-def save():
-    pass
+    if os.path.exists(args.path):  
+        print("Loading...")
+        users=csv_toarray(f"{args.path}\\user.csv",separator=';')
+        candi=csv_toarray(f"{args.path}\\candi.csv",separator=';')
+        bahan_bangunan=csv_toarray(f"{args.path}/bahan_bangunan.csv",separator=';')
+        print("Selamat datang di program “Manajerial Candi”")
+        print("Silahkan masukkan username Anda") 
+        return users,candi,bahan_bangunan
+    else:
+        print(f"Folder “{args.path}” tidak ditemukan.")
+        sys.exit(1)
 
-def help():
-    pass
+
+def save(file,folder,filename):
+    if 'save' not in os.listdir():
+        os.mkdir('save')
+        if folder not in os.listdir('save\\'):
+            os.mkdir(f'save\\{folder}')
+            f = open(f'save\\{folder}\\{filename}', 'w')
+            for i in range(length(file)):
+                for j in range(length(file[0])):
+                    if j != length(file[0])-1:
+                        f.write(f'{file[i][j]};')
+                    else:
+                        f.write(f'{file[i][j]}')
+                f.write('\n')    
+            f.close()
+        else:
+            f = open(f'save\\{folder}\\{filename}', 'w')
+            for i in range(length(file)):
+                for j in range(length(file[0])):
+                    if j != length(file[0])-1:
+                        f.write(f'{file[i][j]};')
+                    else:
+                        f.write(f'{file[i][j]}')
+                f.write('\n')    
+            f.close()
+    else:
+        if folder not in os.listdir('save\\'):
+            os.mkdir(f'save\\{folder}')
+            f = open(f'save\\{folder}\\{filename}', 'w')
+            for i in range(length(file)):
+                for j in range(length(file[0])):
+                    if j != length(file[0])-1:
+                        f.write(f'{file[i][j]};')
+                    else:
+                        f.write(f'{file[i][j]}')
+                f.write('\n')    
+            f.close()
+        else:
+            f = open(f'save\\{folder}\\{filename}', 'w')
+            for i in range(length(file)):
+                for j in range(length(file[0])):
+                    if j != length(file[0])-1:
+                        f.write(f'{file[i][j]};')
+                    else:
+                        f.write(f'{file[i][j]}')
+                f.write('\n')    
+            f.close()
+
+
+def help(role):
+    print('=========== HELP ===========')
+    if role == 'Bandung_Bondowoso':
+        print('1.  logout\n   Untuk keluar dari akun yang digunakan sekarang')
+        print('2.  summonjin\n    Untuk memanggil jin')
+    elif role == 'Roro_Jonggrang':
+        print('1.  logout\n   Untuk keluar dari akun yang digunakan sekarang')
+        print('2.  hancurkancandi\n    Untuk menghancurkan candi yang tersedia')
+    elif role == 'Pengumpul':
+        print('1.  logout\n   Untuk keluar dari akun yang digunakan sekarang')
+        print('2.  kumpul\n    Untuk mengumpulkan resource candi')
+    elif role == 'Pembangun':
+        print('1.  logout\n   Untuk keluar dari akun yang digunakan sekarang')
+        print('2.  bangun\n    Untuk membangun candi')
+    else:
+        print('1.   login\n     Untuk masuk menggunakan akun')
+        print('2.   exit\n     Untuk keluar dari akun')
 
 def exit():
     sys.exit(1)

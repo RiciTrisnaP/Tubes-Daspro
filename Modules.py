@@ -11,6 +11,18 @@ def add(x,y):
     new_list[-1] = y
     return new_list
 
+def remove_last(x):
+    new_list = [0 for i in range(length(x)-1)]
+    for i in range(length(x)-1):
+        new_list[i] = x[i]
+    return new_list
+
+def remove_at_index(list,index):
+    for i in range(index,length(list)-1):
+        list[i] = list[i+1]
+    list = remove_last(list)
+    return list
+
 def csv_toarray(x,separator):
     result_list = []
     with open(x) as files:
@@ -44,9 +56,6 @@ def csv_toarray(x,separator):
             result_list = add(result_list,sublist)
         return result_list
     
-def array_tocsv():
-    pass
-
 def is_part_of(x,y):
     is_part_of = False
     flat_list = []
@@ -57,6 +66,7 @@ def is_part_of(x,y):
         if x == i:
             is_part_of = True
     return is_part_of
+
 
 def validasi_username_1(users,username):
     for i in range(1,length(users)):
