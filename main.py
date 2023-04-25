@@ -1,11 +1,12 @@
-from data import *
+from Fungsi import *
 from Modules import *
 
-users = []
-candi = []
-bahan_bangunan = []
+users = [["","",""] for i in range(102)]
+candi = [["","","","",""] for i in range(100)]
+bahan_bangunan = [["","",""] for i in range(3)]
+stack_undo = [[""] for i in range(200)]
 
-users,candi,bahan_bangunan = load()
+users,candi,bahan_bangunan = load(users,candi,bahan_bangunan)
 
 role = ""
 username = ""
@@ -34,10 +35,7 @@ def commands(masukan):
     # Akses hanya untuk Bandung Bondowoso
     elif masukan == "summonjin":
         if role == "Bandung_Bondowoso":
-            if hitung_jin(users) > 100:
-                print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu")
-            else:
-                users = summonjin(users=users)
+            users = summonjin(users=users)
         else:
             print("Maaf Anda tidak memiliki akses")
 
@@ -45,7 +43,7 @@ def commands(masukan):
     # Akses hanya untuk Bandung Bondowoso
     elif masukan == "hapusjin":
         if role == "Bandung_Bondowoso":
-            users = hapusjin(users)
+            users,candi = hapusjin(users,candi)
         else:
             print("Maaf Anda tidak memiliki akses")
 
@@ -57,12 +55,40 @@ def commands(masukan):
         else:
             print("Maaf Anda tidak memiliki akses")
     
-    #Perintah untuk menyimpan data saat ini
+    # Perintah untuk melakukan pembangunan bagi jin pembangun
+    elif masukan == "bangun":
+        if role == "Jin Pembangun":
+            candi,bahan_bangunan = bangun(candi,bahan_bangunan,username)
+        else:
+            print("Maaf Anda tidak memiliki akses")
+
+    # Perintah untuk mencari bahan bangunan bagi jin pengumpul
+    elif masukan == "kumpul":
+        if role == "Jin Pengumpul":
+            bahan_bangunan = kumpul(bahan_bangunan)
+        else:
+            print("Maaf Anda tidak memiliki akses")
+
+    # Perintah mengerahkan semua jin pembangun untuk melakukan bangun
+    elif masukan == "batchbangun":
+        if role == "Bandung_Bondowoso":
+            candi,bahan_bangunan = batchbangun(users,candi,bahan_bangunan)
+        else:
+            print("Maaf Anda tidak memiliki akses")
+
+    # Perintah mengerahkan semua jin pengumpul untuk mengumpulkan bahan pembuatan candi
+    elif masukan == "batchkumpul":
+        if role == "Bandung_Bondowoso":
+            bahan_bangunan = batchkumpul(users,bahan_bangunan)
+        else:
+            print("Maaf Anda tidak memiliki akses")
+
+    # Perintah untuk menyimpan data saat ini
     elif masukan == 'save':
         folder = input('Masukan nama folder: ')
-        save(users,folder,'user.csv')
-        save(candi,folder,'candi.csv')
-        save(bahan_bangunan,folder,'bahan_bangunan.csv')
+        save(users,102,3,folder,'user.csv')
+        save(candi,100,5,folder,'candi.csv')
+        save(bahan_bangunan,3,3,folder,'bahan_bangunan.csv')
 
     # Perintah untuk meminta bantuan
     elif masukan == "help":
@@ -74,6 +100,10 @@ def commands(masukan):
     
     elif masukan == "users":
         print(users)
+    elif masukan == "candi":
+        print(candi)
+    elif masukan == "bahan_bangunan":
+        print(bahan_bangunan)
     elif masukan == "role":
         print(role)
     else:

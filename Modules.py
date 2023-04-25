@@ -1,98 +1,95 @@
-def length(x):
-    length = 0
-    for i in x:
-        length += 1
-    return length
+import time
 
-def add(x,y):
-    new_list = [0 for i in range(length(x)+1)]
-    for i in range(length(x)):
-        new_list[i] = x[i]
-    new_list[-1] = y
-    return new_list
-
-def remove_last(x):
-    new_list = [0 for i in range(length(x)-1)]
-    for i in range(length(x)-1):
-        new_list[i] = x[i]
-    return new_list
-
-def remove_at_index(list,index):
-    for i in range(index,length(list)-1):
-        list[i] = list[i+1]
-    list = remove_last(list)
+def csv_toarray(list,csv,separator):
+    file = open(csv,"r")
+    index = -1
+    for line in file:
+        if index == -1:
+            index += 1
+        else:
+            sub_index = 0
+            container = ""
+            for i in range(len(line)):
+                if line[i] == separator or line[i] == "\n":
+                    list[index][sub_index] = container
+                    sub_index += 1
+                    container = ""
+                else:
+                    container += line[i]
+            if container != "":
+                list[index][sub_index] = container
+            index += 1
     return list
 
-def csv_toarray(x,separator):
-    result_list = []
-    with open(x) as files:
-        files_length = length(files)
-    with open(x) as files:
-        j = 0
-        for lines in files:
-            j += 1
-            sublist = []
-            first_index = 0
-            last_index = 0
-            i = 0
-            for w in lines:
-                if j == files_length and w == separator and length(lines) == i+1:
-                    last_index = i
-                    sublist = add(sublist,lines[first_index:last_index])
-                    sublist = add(sublist,"")
-                elif w == separator:
-                    last_index = i
-                    sublist = add(sublist,lines[first_index:last_index])
-                    first_index = last_index + 1
-                    i += 1
-                elif length(lines) == i+1:
-                    if j == files_length:
-                        last_index = i+1
-                    else:
-                        last_index = i
-                    sublist = add(sublist,lines[first_index:last_index])
-                else:
-                    i += 1
-            result_list = add(result_list,sublist)
-        return result_list
-    
-def is_part_of(x,y):
-    is_part_of = False
-    flat_list = []
-    for sublist in y:
-        for item in sublist:
-            flat_list = add(flat_list,item)
-    for i in flat_list:
-        if x == i:
-            is_part_of = True
-    return is_part_of
+def cari_index_kosong_terakhir(list,panjang_list,item_kosong):
+    index_kosong_terakhir = panjang_list
+    is_terakhir = False
+    for i in range(panjang_list):
+        if list[i] == item_kosong:
+            if not is_terakhir:
+                index_kosong_terakhir = i
+                is_terakhir = True
+        else:
+            is_terakhir = False
+    return index_kosong_terakhir
 
 
-def validasi_username_1(users,username):
-    for i in range(1,length(users)):
+def cek_full(list,panjang_list,item_kosong):
+    index_kosong_terakhir = cari_index_kosong_terakhir(list,panjang_list,item_kosong)
+    if index_kosong_terakhir == panjang_list:
+        return True
+    else:
+        return False
+
+def username_tersedia(users,username):
+    for i in range(102):
         if username == users[i][0]:
             print(f'Username "{username}" sudah diambil!')
             return False
     return True
 
-def validasi_password(password):
-    if length(password) < 5 or length(password) > 25:
-        print("Password panjangnya harus 5-25 karakter!")
-        return False
-    else:
-        return True
-
-def validasi_username_2(users,username):
-    for i in range(1,length(users)):
+def validasi_username(users,username):
+    for i in range(102):
         if username == users[i][0]:
             index = i
             return True,index
     return False,""
 
-def hitung_jin(users):
-    jumlah_jin = 0
-    for i in range(1,length(users)):
-        opsi_jenis_jin = ["Pengumpul","Pembangun"]
-        if is_part_of(i,opsi_jenis_jin):
-            jumlah_jin += 1
-    return jumlah_jin
+def validasi_password(password):
+    if len(password) < 5 or len(password) > 25:
+        print("Password panjangnya harus 5-25 karakter!")
+        return False
+    else:
+        return True
+
+def hitung_jumlah(list,panjang_list,item_kosong):
+    jumlah = 0
+    for i in range(panjang_list):
+        if list[i] != item_kosong:
+            jumlah += 1
+    return jumlah
+
+def cek_kecukupan_bahan(bahan_bangunan,pasir,batu,air):
+    if int(bahan_bangunan[0][2]) >= pasir and int(bahan_bangunan[1][2]) >= batu and int(bahan_bangunan[2][2]) >= air:
+        return True
+    else:
+        return False
+
+# Bonus
+def random_number_generator(first_number,last_number,seed):
+    a = 75
+    c = 74
+    m = 65537
+    number = (a*seed+c) % m
+    number_on_range = number % (last_number - first_number + 1) + first_number
+    return number_on_range,number
+
+def random_bahan(seed,repeat=False):
+    seed_1 = seed
+    pasir,seed_2 = random_number_generator(1,5,seed_1)
+    batu,seed_3= random_number_generator(1,5,seed_2)
+    air,seed_4 = random_number_generator(1,5,seed_3)
+    if repeat:
+        return pasir,batu,air,seed_4
+    else:
+        return pasir,batu,air
