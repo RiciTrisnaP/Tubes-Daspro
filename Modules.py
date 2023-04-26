@@ -1,5 +1,4 @@
 import time
-
 def csv_toarray(list,csv,separator):
     file = open(csv,"r")
     index = -1
@@ -44,7 +43,7 @@ def cek_full(list,panjang_list,item_kosong):
 def username_tersedia(users,username):
     for i in range(102):
         if username == users[i][0]:
-            print(f'Username "{username}" sudah diambil!')
+            print(f'\nUsername "{username}" sudah diambil!\n')
             return False
     return True
 
@@ -57,23 +56,106 @@ def validasi_username(users,username):
 
 def validasi_password(password):
     if len(password) < 5 or len(password) > 25:
-        print("Password panjangnya harus 5-25 karakter!")
+        print("\nPassword panjangnya harus 5-25 karakter!\n")
         return False
     else:
         return True
 
-def hitung_jumlah(list,panjang_list,item_kosong):
+def hitung_jumlah(list,panjang_list,item_kosong,spesifikasi="",index_spesifikasi=""):
     jumlah = 0
-    for i in range(panjang_list):
-        if list[i] != item_kosong:
-            jumlah += 1
-    return jumlah
+    if spesifikasi == "" or index_spesifikasi == "":
+        for i in range(panjang_list):
+            if list[i] != item_kosong:
+                jumlah += 1
+        return jumlah
+    else:
+        for i in range(panjang_list):
+            if list[i][index_spesifikasi] == spesifikasi:
+                jumlah += 1
+        return jumlah
 
 def cek_kecukupan_bahan(bahan_bangunan,pasir,batu,air):
     if int(bahan_bangunan[0][2]) >= pasir and int(bahan_bangunan[1][2]) >= batu and int(bahan_bangunan[2][2]) >= air:
         return True
     else:
         return False
+
+def sort_leksikografis(list,panjang_list,terurut_naik=True):
+    for i in range(panjang_list):
+         for j in range(i+1,panjang_list):
+            if terurut_naik:
+                if list[i][0] > list[j][0]:
+                    temp = list[i]
+                    list[i] = list[j]
+                    list[j] = temp
+            else:
+                if list[i] < list[j]:
+                    temp = list[i]
+                    list[i] = list[j]
+                    list[j] = temp
+    return list 
+
+def cari_index_maxmin(list,panjang_list,tipe):
+        nilai_min = list[0][1]
+        nilai_max = list[0][1]
+        index_min = 0
+        index_max = 0
+        if tipe == "max":
+            for i in range(panjang_list):
+                if list[i][1] > nilai_max and list[i][0] != "":
+                    nilai_max = list[i][1]
+                    index_max = i
+            return index_max
+        else:
+            for i in range(panjang_list):
+                if list[i][1] < nilai_min and list[i][0] != "":
+                    nilai_min = list[i][1]
+                    index_min = i
+            return index_min
+
+
+def cek_sudah_terhitung(list,panjang_list,index,item):
+    for i in range(panjang_list):
+        if list[i][index] == item:
+            return True
+    return False    
+
+def generate_list_jumlah_candi_per_jin(candi):
+    list_jumlah_candi_per_jin = [["",0] for i in range(100)]
+    for i in range(100):
+        if not cek_sudah_terhitung(list_jumlah_candi_per_jin,100,0,candi[i][1]):
+            username = candi[i][1]
+            jumlah_candi = hitung_jumlah(candi,100,["","","","",""],username,1)
+            index_kosong_terakhir = cari_index_kosong_terakhir(list_jumlah_candi_per_jin,100,["",0])
+            list_jumlah_candi_per_jin[index_kosong_terakhir] = [username,jumlah_candi]
+    return list_jumlah_candi_per_jin
+
+def cari_jin(candi,tipe):
+    jumlah_candi = hitung_jumlah(candi,100,["","","","",""])
+    if jumlah_candi != 0:
+        list_jumlah_candi_per_jin = generate_list_jumlah_candi_per_jin(candi)
+        if tipe == "rajin":
+            list_jumlah_candi_per_jin = sort_leksikografis(list_jumlah_candi_per_jin,100,terurut_naik=True)
+            index_max = cari_index_maxmin(list_jumlah_candi_per_jin,100,"max")
+            return list_jumlah_candi_per_jin[index_max][0]
+        else:
+            list_jumlah_candi_per_jin = sort_leksikografis(list_jumlah_candi_per_jin,100,terurut_naik=False)
+            index_min = cari_index_maxmin(list_jumlah_candi_per_jin,100,"min")
+            return list_jumlah_candi_per_jin[index_min][0]
+    else:
+        return "-"
+    
+def generate_list_harga_candi(candi,jumlah_candi):
+    list_harga_candi = [["",0] for i in range(100)]
+    if jumlah_candi != 0:
+        for i in range(100):
+            if candi[i] != ["","","","",""]:
+                list_harga_candi[i][0] = int(candi[i][0])
+                list_harga_candi[i][1] = int(candi[i][2]) * 10000 + int(candi[i][3]) * 15000 + int(candi[i][4]) * 7500
+        return list_harga_candi 
+    else:
+        return ["",0]
+
 
 # Bonus
 def random_number_generator(first_number,last_number,seed):
@@ -93,3 +175,4 @@ def random_bahan(seed,repeat=False):
         return pasir,batu,air,seed_4
     else:
         return pasir,batu,air
+    

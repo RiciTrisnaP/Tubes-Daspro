@@ -24,6 +24,24 @@ def random_bahan(repeat=False,repeat_time=0):
             pasir,batu,air,seed = generate_bahan(seed)
             list_bahan[i] = [pasir,batu,air]
         return list_bahan
+    
+def sort_leksikografis(list,panjang_list,terurut_naik=True):
+    for i in range(panjang_list):
+         for j in range(i+1,panjang_list):
+            if terurut_naik:
+                if list[i][0] > list[j][0]:
+                    temp = list[i]
+                    list[i] = list[j]
+                    list[j] = temp
+            else:
+                if list[i] < list[j]:
+                    temp = list[i]
+                    list[i] = list[j]
+                    list[j] = temp
+    return list 
+
+list = sort_leksikografis([["abcd",8],["crya",8],["brya",7],["erya",4],["abcde",9],["abcc",9],["",0]],7,False)
+print(list)
 
 # list_bahan = random_bahan(repeat=True,repeat_time=9)
 # print(list_bahan)
