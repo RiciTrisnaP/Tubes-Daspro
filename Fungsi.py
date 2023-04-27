@@ -267,7 +267,7 @@ def hancurkancandi(candi):
     if konfirmasi == "Y":
         for i in range(100):
             if candi[i][0] == ID_candi:
-                candi[i][0] = ["","","","",""]
+                candi[i] = ["","","","",""]
                 print("\nCandi telah berhasil dihancurkan.")
                 return candi
         print("Tidak ada candi dengan ID tersebut.")
