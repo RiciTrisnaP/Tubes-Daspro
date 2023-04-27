@@ -54,8 +54,8 @@ def summonjin(users):
 
     is_full = cek_full(users,102,["","",""])
     if not is_full:
-        index_kosong_terakhir = cari_index_kosong_terakhir(users,102,["","",""])
-        users[index_kosong_terakhir] = [username_jin,password_jin,role_jin]
+        index_kosong = cari_index_kosong(users,102,["","",""])
+        users[index_kosong] = [username_jin,password_jin,role_jin]
         print("\nMengumpulkan sesajen...")
         print("Menyerahkan sesajen...")
         print("Membacakan mantra...\n")
@@ -73,7 +73,7 @@ def hapusjin(users,candi):
             users[index_username_jin] = ["","",""]
             for i in range(100):
                 if candi[i][1] == username_jin:
-                    candi[i][1] == ["","","","",""]
+                    candi[i] = ["","","","",""]
             print("\nJin telah berhasil dihapus dari alam gaib.\n")
         elif konfirmasi == "N":
             print("\nPenghapusan jin dibatalkan.\n")
@@ -106,7 +106,6 @@ def ubahjin(users):
 
 def bangun(candi,bahan_bangunan,username,seed,repeat=False):
     pasir,batu,air,seed  = random_bahan(seed,True)
-    print(pasir,batu,air)
     is_bahan_cukup = cek_kecukupan_bahan(bahan_bangunan,pasir,batu,air)
     list_pembangunan = ["","","","",""]
     if is_bahan_cukup or repeat:
@@ -114,9 +113,9 @@ def bangun(candi,bahan_bangunan,username,seed,repeat=False):
         if not is_full:
             list_pembangunan = ["",username,pasir,batu,air]
         if not repeat:
-            index_kosong_terakhir = cari_index_kosong_terakhir(candi,100,["","","","",""])
-            list_pembangunan[0] = index_kosong_terakhir+1
-            candi[index_kosong_terakhir] = list_pembangunan
+            index_kosong = cari_index_kosong(candi,100,["","","","",""])
+            list_pembangunan[0] = index_kosong+1
+            candi[index_kosong] = list_pembangunan
             bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - pasir
             bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - batu
             bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - air
@@ -170,8 +169,8 @@ def batchbangun(users,candi,bahan_bangunan,seed):
     for i in range(102):
         if users[i][2] == "Jin Pembangun":
             seed,list_pembangunan = bangun(candi,bahan_bangunan,users[i][0],seed,repeat=True)
-            index_kosong_terakhir = cari_index_kosong_terakhir(matriks_pembangunan,100,["","","","",""])
-            matriks_pembangunan[index_kosong_terakhir] = list_pembangunan
+            index_kosong = cari_index_kosong(matriks_pembangunan,100,["","","","",""])
+            matriks_pembangunan[index_kosong] = list_pembangunan
     if jumlah_jin_pembangun != 0:
         for i in range(jumlah_jin_pembangun):
             total_pasir += int(matriks_pembangunan[i][2])
@@ -183,10 +182,10 @@ def batchbangun(users,candi,bahan_bangunan,seed):
             bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - total_pasir
             bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - total_batu
             bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - total_air
-            for i in range(cari_index_kosong_terakhir(matriks_pembangunan,100,["","","","",""])):
-                index_kosong_terakhir = cari_index_kosong_terakhir(candi,100,["","","","",""])
-                matriks_pembangunan[i][0] = index_kosong_terakhir+1 
-                candi[index_kosong_terakhir] = matriks_pembangunan[i]
+            for i in range(cari_index_kosong(matriks_pembangunan,100,["","","","",""])):
+                index_kosong = cari_index_kosong(candi,100,["","","","",""])
+                matriks_pembangunan[i][0] = index_kosong+1 
+                candi[index_kosong] = matriks_pembangunan[i]
             print(f"Jin berhasil membangun total {jumlah_jin_pembangun} candi.\n")
         else:
             string_pasir = f'{ total_pasir - int(bahan_bangunan[0][2])} pasir' if int(bahan_bangunan[0][2]) < total_pasir else ""
@@ -262,11 +261,34 @@ def laporancandi(candi):
         print(f"ID Candi Termurah: -\n")
 
 
-def hancurkancandi():
-    pass
+def hancurkancandi(candi):
+    ID_candi = input("Masukkan ID candi: ")
+    konfirmasi = input(f"Apakah anda yakin ingin menghancurkan candi ID: {ID_candi} (Y/N)? ")
+    if konfirmasi == "Y":
+        for i in range(100):
+            if candi[i][0] == ID_candi:
+                candi[i][0] = ["","","","",""]
+                print("\nCandi telah berhasil dihancurkan.")
+                return candi
+        print("Tidak ada candi dengan ID tersebut.")
+        return candi
+    elif konfirmasi == "N":
+        print("Penghancuran candi dibatalkan.")
+    else:
+        print("Perintah tidak dikenali. Penghancuran candi dibatalkan.")
 
-def ayamberkokok():
-    pass
+def ayamberkokok(candi):
+    print("Kukuruyuk.. Kukuruyuk..")
+    jumlah_candi = hitung_jumlah(candi,100,["","","","",""])
+    print(f"\nJumlah candi: {jumlah_candi}")
+    if jumlah_candi < 100:
+        print("\nSelamat, Roro Jonggrang memenangkan permainan!")
+        print("\n*Bandung Bondowoso angry noise*")
+        print("Roro Jonggrang dikutuk menjadi candi.\n")
+        sys.exit(1)
+    else:
+        print("\nYah, Bandung Bondowoso memenangkan permainan!\n")
+        sys.exit(1)
 
 def load(users,candi,bahan_bangunan):
     parser = argparse.ArgumentParser(usage="python main.py <nama_folder>") 
@@ -279,7 +301,7 @@ def load(users,candi,bahan_bangunan):
     if os.path.exists(args.path):  
         print("\nLoading...")
         users=csv_toarray(users,f"{args.path}\\user.csv",separator=';')
-        candi=csv_toarray(candi,f"{args.path}\\candi.csv",separator=';')
+        candi=perbaikan_numerasi(csv_toarray(candi,f"{args.path}\\candi.csv",separator=';'))
         bahan_bangunan=csv_toarray(bahan_bangunan,f"{args.path}/bahan_bangunan.csv",separator=';')
         print("Selamat datang di program “Manajerial Candi”")
         print("Silahkan masukkan username Anda\n") 

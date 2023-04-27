@@ -43,5 +43,3 @@ def sort_leksikografis(list,panjang_list,terurut_naik=True):
 list = sort_leksikografis([["abcd",8],["crya",8],["brya",7],["erya",4],["abcde",9],["abcc",9],["",0]],7,False)
 print(list)
 
-# list_bahan = random_bahan(repeat=True,repeat_time=9)
-# print(list_bahan)

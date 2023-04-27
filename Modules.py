@@ -20,22 +20,40 @@ def csv_toarray(list,csv,separator):
             index += 1
     return list
 
-def cari_index_kosong_terakhir(list,panjang_list,item_kosong):
-    index_kosong_terakhir = panjang_list
-    is_terakhir = False
+def perbaikan_numerasi(candi):
+    list_kosong = [["","","","",""] for i in range(100)]
+    for i in range(100):
+        if candi[i][0] != "":
+            id_candi = int(candi[i][0])
+            list_kosong[id_candi-1] = candi[i]
+    return list_kosong
+
+def cari_index_kosong(list,panjang_list,item_kosong,tipe="terakhir"):
+    index_kosong = panjang_list
     for i in range(panjang_list):
         if list[i] == item_kosong:
-            if not is_terakhir:
-                index_kosong_terakhir = i
-                is_terakhir = True
-        else:
-            is_terakhir = False
-    return index_kosong_terakhir
+            index_kosong = i
+            return index_kosong
+
+
+# def cari_index_kosong(list,panjang_list,item_kosong,tipe="terakhir"):
+#     index_kosong_terakhir = panjang_list
+#     is_terakhir = False
+#     for i in range(panjang_list):
+#         if list[i] == item_kosong:
+#             if not is_terakhir:
+#                 index_kosong_terakhir = i
+#                 is_terakhir = True
+#                 if tipe == "terawal":
+#                     return index_kosong_terakhir
+#         else:
+#             is_terakhir = False
+#     return index_kosong_terakhir
 
 
 def cek_full(list,panjang_list,item_kosong):
-    index_kosong_terakhir = cari_index_kosong_terakhir(list,panjang_list,item_kosong)
-    if index_kosong_terakhir == panjang_list:
+    index_kosong = cari_index_kosong(list,panjang_list,item_kosong,tipe="terawal")
+    if index_kosong == panjang_list:
         return True
     else:
         return False
@@ -126,8 +144,8 @@ def generate_list_jumlah_candi_per_jin(candi):
         if not cek_sudah_terhitung(list_jumlah_candi_per_jin,100,0,candi[i][1]):
             username = candi[i][1]
             jumlah_candi = hitung_jumlah(candi,100,["","","","",""],username,1)
-            index_kosong_terakhir = cari_index_kosong_terakhir(list_jumlah_candi_per_jin,100,["",0])
-            list_jumlah_candi_per_jin[index_kosong_terakhir] = [username,jumlah_candi]
+            index_kosong = cari_index_kosong(list_jumlah_candi_per_jin,100,["",0],tipe="terawal")
+            list_jumlah_candi_per_jin[index_kosong] = [username,jumlah_candi]
     return list_jumlah_candi_per_jin
 
 def cari_jin(candi,tipe):
@@ -175,4 +193,3 @@ def random_bahan(seed,repeat=False):
         return pasir,batu,air,seed_4
     else:
         return pasir,batu,air
-    

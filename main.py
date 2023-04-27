@@ -98,6 +98,21 @@ def commands(masukan):
             laporancandi(candi)
         else:
             print("Laporan candi hanya dapat diakses oleh akun Bandung Bondowoso.\n")
+    
+    # Perintah untuk menghancurkan candi
+    # Akses : Roro Jonggrang
+    elif masukan == "hancurkancandi":
+        if role == "Roro_Jonggrang":
+            candi = hancurkancandi(candi)
+        else:
+            print("Penghancuran candi hanya dapat dilakukan oleh Roro Jonggrang")
+    
+    # Perintah untuk mengakhiri pembangunan candi
+    elif masukan == "ayamberkokok":
+        if role == "Roro_Jonggrang":
+            ayamberkokok()
+        else:
+            print("Ayam hanya bisa berkokok apabila diperintah Roro Jonggrang!")
 
     # Perintah untuk menyimpan data saat ini
     elif masukan == 'save':
