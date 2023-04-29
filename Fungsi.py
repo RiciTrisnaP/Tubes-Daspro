@@ -61,7 +61,7 @@ def summonjin(users):
         print("Membacakan mantra...\n")
         print(f"Jin {username_jin} berhasil dipanggil!\n")
     else:
-        print("Jumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu\n")
+        print("\nJumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu\n")
     return users
         
 def hapusjin(users,candi):

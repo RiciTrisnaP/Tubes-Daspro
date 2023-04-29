@@ -34,6 +34,7 @@ def cari_index_kosong(list,panjang_list,item_kosong,tipe="terakhir"):
         if list[i] == item_kosong:
             index_kosong = i
             return index_kosong
+    return index_kosong
 
 
 # def cari_index_kosong(list,panjang_list,item_kosong,tipe="terakhir"):
