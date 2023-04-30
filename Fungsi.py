@@ -3,6 +3,7 @@ import sys
 import os
 import argparse
 
+# F01
 def login(users,role):
     username = input("Username: ")
     password = input("Password: ")
@@ -22,7 +23,7 @@ def login(users,role):
 def logout(role):
     if role != "":
         role = ""
-        print("")
+        print("") 
     else:
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout\n")

@@ -36,22 +36,6 @@ def cari_index_kosong(list,panjang_list,item_kosong,tipe="terakhir"):
             return index_kosong
     return index_kosong
 
-
-# def cari_index_kosong(list,panjang_list,item_kosong,tipe="terakhir"):
-#     index_kosong_terakhir = panjang_list
-#     is_terakhir = False
-#     for i in range(panjang_list):
-#         if list[i] == item_kosong:
-#             if not is_terakhir:
-#                 index_kosong_terakhir = i
-#                 is_terakhir = True
-#                 if tipe == "terawal":
-#                     return index_kosong_terakhir
-#         else:
-#             is_terakhir = False
-#     return index_kosong_terakhir
-
-
 def cek_full(list,panjang_list,item_kosong):
     index_kosong = cari_index_kosong(list,panjang_list,item_kosong,tipe="terawal")
     if index_kosong == panjang_list:
