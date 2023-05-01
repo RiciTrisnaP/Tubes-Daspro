@@ -3,120 +3,128 @@ import sys
 import os
 import argparse
 
-# F01
+# F01  
 def login(users,role):
     username = input("Username: ")
     password = input("Password: ")
-    for i in range(102):
-        if users[i][0] == username:
-            if users[i][1] == password:
+    for i in range(102): # Mengecek setiap instance dalam users
+        if users[i][0] == username: # Mengecek apakah username yang dimasukan terdaftar pada database users
+            if users[i][1] == password: # Mengecek apakah password benar dan sesuai dengan username
                 role = users[i][2]
                 print(f"\nSelamat datang, {users[i][0]}!")
                 print('Masukkan command "help" untuk daftar command yang dapat kamu panggil.\n')
                 return username,role
-            else:
+    # Jika tidak maka role dan username tetep ""
+            else: 
                 print("\nPassword salah!\n")
                 return "",""
     print("\nUsername tidak terdaftar!\n")
     return "",""
 
+# F02 
 def logout(role):
-    if role != "":
+    if role != "": # Apabila sudah login maka role diubah menjadi ""
         role = ""
         print("") 
-    else:
+    else: # Apabila belum login maka role tidak berubah
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout\n")
     return role
 
+# F03
 def summonjin(users):
     print("""Jenis jin yang dapat dipanggil:
 (1) Pengumpul - Bertugas mengumpulkan bahan bangunan
 (2) Pembangun - Bertugas membangun candi""")
     jenis_jin = input("\nMasukkan nomor jenis jin yang ingin dipanggil: ")
 
-    if jenis_jin == "1":
+    if jenis_jin == "1": # Apabila memilih 1 maka role jin adalah jin pengumpul
         print(f'\nMemilih jin "Pengumpul"')
         role_jin = "Jin Pengumpul"
-    elif jenis_jin == "2":
+    elif jenis_jin == "2": # Apabila memilih 2 maka role jin adalah jin pembangun
         print(f'\nMemilih jin "Pembangun"')
         role_jin = "Jin Pembangun"
-    else:
+    else: # Apabila memilih selain 1 dan 2 maka fungsi akan berhenti dan return users seperti keadaan awal
         print(f"\nTidak ada jenis jin bernomor {jenis_jin}\n")
         return users
 
     username_jin = input("\nMasukkan username jin: ")
-    while username_tersedia(users,username_jin) != True:
+    while username_tersedia(users,username_jin) != True: # Mengecek ketersediaan username
         username_jin = input("Masukkan username jin: ")
 
     password_jin = input("Masukkan password jin: ")
-    while validasi_password(password_jin) != True:
+    while validasi_password(password_jin) != True: # Mengecek kevalidan password
         password_jin = input("Masukkan password jin: ")
 
-    is_full = cek_full(users,102,["","",""])
-    if not is_full:
+    is_full = cek_full(users,102,["","",""]) 
+    if not is_full: # Apabila users belum full maka tambahkan jin ke dalam users
         index_kosong = cari_index_kosong(users,102,["","",""])
         users[index_kosong] = [username_jin,password_jin,role_jin]
         print("\nMengumpulkan sesajen...")
         print("Menyerahkan sesajen...")
         print("Membacakan mantra...\n")
         print(f"Jin {username_jin} berhasil dipanggil!\n")
-    else:
+    else: # Apabila jin sudah berjumlah 100 (sudah full) maka return users seperti keadaan awal
         print("\nJumlah Jin telah maksimal! (100 jin). Bandung tidak dapat men-summon lebih dari itu\n")
     return users
-        
+
+# F04
 def hapusjin(users,candi):
     username_jin = input("Masukkan username jin: ")
-    is_valid,index_username_jin = validasi_username(users,username_jin)
-    if is_valid:
+    is_valid,index_username_jin = validasi_username(users,username_jin) # Mengecek kevalidan username jin sekaligus mencari index username jin pada matriks users
+    if is_valid: # Apabila username valid
         konfirmasi = input(f"Apakah Anda yakin ingin menghapus jin dengan username {username_jin} (Y/N)?")
-        if konfirmasi == "Y":
-            users[index_username_jin] = ["","",""]
+        if konfirmasi == "Y": # Apabila dikonfirmasi
+            users[index_username_jin] = ["","",""] # Menghapus entry jin yang dihapus pada users
             for i in range(100):
-                if candi[i][1] == username_jin:
+                if candi[i][1] == username_jin: # Menghapus semua entry candi oleh jin yang dihapus
                     candi[i] = ["","","","",""]
             print("\nJin telah berhasil dihapus dari alam gaib.\n")
-        elif konfirmasi == "N":
+        elif konfirmasi == "N": # Apabila dibatalkan
             print("\nPenghapusan jin dibatalkan.\n")
-        else:
+        else: # Apabila konfirmasi bukan Y atau N
             print("\nPerintah tidak dikenali, penghapusan jin dibatalkan.\n")
-    else:
+    else: # Apabila username tidak valid
         print("\nTidak ada jin dengan username tersebut.\n")
     return users,candi
-    
+
+# F05
 def ubahjin(users):
     username_jin = input("Masukkan username jin: ")
-    is_valid,index_username_jin = validasi_username(users,username_jin)
-    if is_valid:
-        if users[index_username_jin][2] == "Jin Pengumpul":
-            opsi_ganti_jenis_jin = "Jin Pembangun"
+    is_valid,index_username_jin = validasi_username(users,username_jin)  # Mengecek kevalidan username jin sekaligus mencari index username jin pada matriks users
+    if is_valid: # Apabila username valid
+        if users[index_username_jin][2] == "Jin Pengumpul": # Apabila jin pengumpul ganti ke jin pembangun dan sebaliknya
+            opsi_ganti_jenis_jin = "Jin Pembangun" 
         else:
             opsi_ganti_jenis_jin = "Jin Pengumpul"
         print(f'Jin ini bertipe "{users[index_username_jin][2]}". Yakin ingin mengubah ke tipe "{opsi_ganti_jenis_jin}?" ')
         konfirmasi = input("(Y/N)? ")
-        if konfirmasi == "Y":
+        if konfirmasi == "Y": # Apabila dikonfirmasi maka ganti jenis jin
             users[index_username_jin][2] = opsi_ganti_jenis_jin
             print("\nJin telah berhasil diubah.\n")
-        elif konfirmasi == "N":
+        elif konfirmasi == "N": # Apabila dibatalkan maka tidak diganti
             print("\nPerubahan jin dibatalkan\n")
-        else:
+        else: # Apabila tidak dikenali maka dibatalkan
             print("\nPerintah tidak dikenali, perubahan jin dibatalkan\n")
-    else:
+    else: # Apabila username tidak valid maka tidak bisa diganti
         print("\nTidak ada jin dengan username tersebut.\n")
     return users
 
+# F06
 def bangun(candi,bahan_bangunan,username,seed,repeat=False):
-    pasir,batu,air,seed  = random_bahan(seed,True)
-    is_bahan_cukup = cek_kecukupan_bahan(bahan_bangunan,pasir,batu,air)
+    pasir,batu,air,seed  = random_bahan(seed,True) # Mengenerate jumlah pasir batu dan air secara random
+    is_bahan_cukup = cek_kecukupan_bahan(bahan_bangunan,pasir,batu,air) # Mengecek kecukupan bahan pembangunan
     list_pembangunan = ["","","","",""]
-    if is_bahan_cukup or repeat:
+    if is_bahan_cukup or repeat: # Apabila bahan cukup atau merupakan prosedur batch bangun 
         is_full = cek_full(candi,100,["","","","",""])
-        if not is_full:
+        if not is_full: # Apabila candi belum 100
             list_pembangunan = ["",username,pasir,batu,air]
-        if not repeat:
+        if not repeat: # Apabila bukan prosedur batch bangun
+            # Menambahkan candi yang dibangun ke dalam matriks candi
             index_kosong = cari_index_kosong(candi,100,["","","","",""])
             list_pembangunan[0] = index_kosong+1
             candi[index_kosong] = list_pembangunan
+            # Mengurangi bahan sesuai bahan yang diperlukan
             bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - pasir
             bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - batu
             bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - air
@@ -124,62 +132,70 @@ def bangun(candi,bahan_bangunan,username,seed,repeat=False):
             jumlah_candi = hitung_jumlah(candi,100,["","","","",""])
             print(f"Sisa candi yang perlu dibangun: {100-jumlah_candi}\n")
             return seed,candi,bahan_bangunan
-    else:
+    else: # Apabila bahan tidak cukup dan bukan repeat
         if not repeat:
             print("Bahan bangunan tidak mencukupi.")
             print("Candi tidak bisa dibangun!\n")
             return seed,candi,bahan_bangunan
     return seed,list_pembangunan
 
+#F07
 def kumpul(bahan_bangunan,seed,repeat=False):
-    pasir,batu,air,seed = random_bahan(seed,repeat=True)
+    pasir,batu,air,seed = random_bahan(seed,repeat=True) # Mengenerate jumlah pasir batu dan air secara random
+    # Menambah bahan sesuai bahan yang didapat
     bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) + pasir
     bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) + batu
     bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) + air
-    if not repeat:
+    if not repeat: # Jika bukan prosedur batch kumpul
         print(f"Jin menemukan {pasir} pasir, {batu} batu, dan {air} air.\n")
         return seed,bahan_bangunan
-    else:
+    else: # Jika merupakan prosedur batch kumpul
         return bahan_bangunan,pasir,batu,air,seed
 
+#F08_1
 def batchkumpul(users,bahan_bangunan,seed):
     total_pasir = 0
     total_batu = 0
     total_air = 0
     jumlah_jin_pengumpul = hitung_jumlah(users,102,["","",""],"Jin Pengumpul",2)
+    # Mengecek setiap jin pengumpul pada users
     for i in range(102):
         if users[i][2] == "Jin Pengumpul":
-            bahan_bangunan,pasir,batu,air,seed = kumpul(bahan_bangunan,seed,repeat=True)
+            # Mengenerate jumlah pasir batu dan air secara random lalu menambahkan pada total bahan
+            bahan_bangunan,pasir,batu,air,seed = kumpul(bahan_bangunan,seed,repeat=True) 
             total_pasir += pasir
             total_batu += batu
             total_air += air
-    if jumlah_jin_pengumpul != 0:
+    if jumlah_jin_pengumpul != 0: # Jika ada jin pengumpul maka berhasil dan bahan baku akan ditambahkan ke matriks bahan_bangunan
         print(f"Mengerahkan {jumlah_jin_pengumpul} jin untuk mengumpulkan bahan.")
         print(f"Jin menemukan total {total_pasir} pasir, {total_batu} batu, dan {total_air} air.\n")
-    else:
+    else: # Apabila tidak ada jin pengumpul maka gagal
         print("Kumpul gagal. Anda tidak punya jin pengumpul. Silahkan summon terlebih dahulu.\n")
     return seed,bahan_bangunan
 
+#F08_2
 def batchbangun(users,candi,bahan_bangunan,seed):
     total_pasir = 0
     total_batu = 0
     total_air = 0
     jumlah_jin_pembangun = hitung_jumlah(users,102,["","",""],"Jin Pembangun",2)
-    list_pembangunan = ["","","","",""]
-    matriks_pembangunan = [["","","","",""] for i in range(100)]
+    list_pembangunan = ["","","","",""] 
+    matriks_pembangunan = [["","","","",""] for i in range(100)] 
+    # Mengecek setiap jin pembangun pada users
     for i in range(102):
-        if users[i][2] == "Jin Pembangun":
+        if users[i][2] == "Jin Pembangun": # Apabila ada jin pembangun maka akan dicatat entry pembangunan pada matriks sementara
             seed,list_pembangunan = bangun(candi,bahan_bangunan,users[i][0],seed,repeat=True)
             index_kosong = cari_index_kosong(matriks_pembangunan,100,["","","","",""])
             matriks_pembangunan[index_kosong] = list_pembangunan
-    if jumlah_jin_pembangun != 0:
+    if jumlah_jin_pembangun != 0: # Apabila terdapat jin pembangun pada users
         for i in range(jumlah_jin_pembangun):
+            # Mencari total bahan yang diperlukan untuk semua candi
             total_pasir += int(matriks_pembangunan[i][2])
             total_batu += int(matriks_pembangunan[i][3])
             total_air += int(matriks_pembangunan[i][4])
         print(f"Mengerahkan {jumlah_jin_pembangun} jin untuk membangun candi dengan total bahan {total_pasir} pasir, {total_batu} batu, {total_air} air.")
         is_bahan_cukup = cek_kecukupan_bahan(bahan_bangunan,total_pasir,total_batu,total_air)
-        if is_bahan_cukup:
+        if is_bahan_cukup: # Apabila bahan cukup
             bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - total_pasir
             bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - total_batu
             bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - total_air
@@ -217,6 +233,7 @@ def batchbangun(users,candi,bahan_bangunan,seed):
         print("Bangun gagal. Anda tidak punya jin pembangun. Silahkan summon terlebih dahulu.\n")
     return seed,candi,bahan_bangunan
 
+#F09
 def laporanjin(users,candi,bahan_bangunan):
     jumlah_jin = hitung_jumlah(users,102,["","",""])-2
     jumlah_jin_pengumpul = hitung_jumlah(users,102,["","",""],"Jin Pengumpul",2)
@@ -234,7 +251,8 @@ def laporanjin(users,candi,bahan_bangunan):
     print(f"Jumlah Pasir: {total_pasir} unit")
     print(f"Jumlah Air: {total_air}")
     print(f"Jumlah Batu: {total_batu}\n")
-    
+
+#F10
 def laporancandi(candi):
     jumlah_candi = hitung_jumlah(candi,100,["","","","",""])
     total_pasir_digunakan = 0
@@ -261,7 +279,7 @@ def laporancandi(candi):
         print(f"ID Candi Termahal: -")
         print(f"ID Candi Termurah: -\n")
 
-
+#F11
 def hancurkancandi(candi):
     ID_candi = input("Masukkan ID candi: ")
     konfirmasi = input(f"Apakah anda yakin ingin menghancurkan candi ID: {ID_candi} (Y/N)? ")
@@ -278,6 +296,7 @@ def hancurkancandi(candi):
     else:
         print("Perintah tidak dikenali. Penghancuran candi dibatalkan.")
 
+#F12
 def ayamberkokok(candi):
     print("Kukuruyuk.. Kukuruyuk..")
     jumlah_candi = hitung_jumlah(candi,100,["","","","",""])
@@ -291,6 +310,7 @@ def ayamberkokok(candi):
         print("\nYah, Bandung Bondowoso memenangkan permainan!\n")
         sys.exit(1)
 
+#F13
 def load(users,candi,bahan_bangunan):
     parser = argparse.ArgumentParser(usage="python main.py <nama_folder>") 
     parser.add_argument("path")
@@ -311,7 +331,7 @@ def load(users,candi,bahan_bangunan):
         print(f"Folder “{args.path}” tidak ditemukan.")
         sys.exit(1)
 
-
+#F14
 def save(file,panjang_file,panjang_sub_item,folder,filename):
     if 'save' not in os.listdir():
         os.mkdir('save')
@@ -338,6 +358,7 @@ def save(file,panjang_file,panjang_sub_item,folder,filename):
             f.write('\n')    
     f.close()
 
+#F15
 def help(role):
     print('=========== HELP ===========')
     if role == 'Bandung_Bondowoso':
@@ -364,10 +385,6 @@ def help(role):
         print('2.  exit\n    Untuk keluar dari program dan kembali ke terminal')
     print("")
 
+#F16
 def exit():
     sys.exit(1)
-
-# BONUS
-
-def undo(stack_list):
-    pass

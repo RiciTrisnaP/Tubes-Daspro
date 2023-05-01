@@ -1,19 +1,26 @@
+# Mengimport Fungsi.py dan Modules.py
 from Fungsi import *
 from Modules import *
 
+# Menginisiasi array of array users,candi, dan bahan_bangunan
 users = [["","",""] for i in range(102)]
 candi = [["","","","",""] for i in range(100)]
 bahan_bangunan = [["","",""] for i in range(3)]
-stack_undo = [[""] for i in range(200)]
+
+# Mengambil nilai seed untuk Random Number Generator
 seed = time.time_ns()
 
+# Mengambil data dari CSV pada folder yang telah disediakan pengguna
 users,candi,bahan_bangunan = load(users,candi,bahan_bangunan)
 
+# Menginisiasi variabel string role dan username dengan nilai ""
+# "" pada role dan username menandakan users belum login
 role = ""
 username = ""
 
+# Mendefinisikan fungsi commands
 def commands(masukan):
-    # Deklarasi global variabel untuk memodifikasi nilai variabel global
+    # Deklarasi global variabel agar nilai variabel dapat dimodifikasi di scope manapun
     global users
     global candi
     global bahan_bangunan
@@ -110,7 +117,7 @@ def commands(masukan):
     # Perintah untuk mengakhiri pembangunan candi
     elif masukan == "ayamberkokok":
         if role == "Roro_Jonggrang":
-            ayamberkokok()
+            ayamberkokok(candi)
         else:
             print("Ayam hanya bisa berkokok apabila diperintah Roro Jonggrang!")
 
