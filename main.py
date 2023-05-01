@@ -1,6 +1,7 @@
 # Mengimport Fungsi.py dan Modules.py
 from Fungsi import *
 from Modules import *
+import time
 
 # Menginisiasi array of array users,candi, dan bahan_bangunan
 users = [["","",""] for i in range(102)]
@@ -124,17 +125,19 @@ def commands(masukan):
     # Perintah untuk menyimpan data saat ini
     elif masukan == 'save':
         folder = input('Masukan nama folder: ')
+        print("Saving...")
         save(users,102,3,folder,'user.csv')
         save(candi,100,5,folder,'candi.csv')
         save(bahan_bangunan,3,3,folder,'bahan_bangunan.csv')
+        print(f"Berhasil menyimpan data di folder save/{folder}!\n") 
 
     # Perintah untuk meminta bantuan
     elif masukan == "help":
         help(role)
 
-    # Perintah untukl keluar program
+    # Perintah untuk keluar program
     elif masukan == "exit":
-        exit()
+        exit(users,candi,bahan_bangunan)
     
     elif masukan == "users":
         print(users)

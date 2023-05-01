@@ -26,6 +26,7 @@ def logout(role):
     if role != "": # Apabila sudah login maka role diubah menjadi ""
         role = ""
         print("") 
+        # Keluar dari akun
     else: # Apabila belum login maka role tidak berubah
         print("Logout gagal!")
         print("Anda belum login, silahkan login terlebih dahulu sebelum melakukan logout\n")
@@ -120,14 +121,16 @@ def bangun(candi,bahan_bangunan,username,seed,repeat=False):
         if not is_full: # Apabila candi belum 100
             list_pembangunan = ["",username,pasir,batu,air]
         if not repeat: # Apabila bukan prosedur batch bangun
-            # Menambahkan candi yang dibangun ke dalam matriks candi
-            index_kosong = cari_index_kosong(candi,100,["","","","",""])
-            list_pembangunan[0] = index_kosong+1
-            candi[index_kosong] = list_pembangunan
-            # Mengurangi bahan sesuai bahan yang diperlukan
-            bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - pasir
-            bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - batu
-            bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - air
+            # Apabila list_pembangunan tidak kosong maka masukkan ke entry candi
+            if list_pembangunan != ["","","","",""]:
+                # Menambahkan candi yang dibangun ke dalam matriks candi
+                index_kosong = cari_index_kosong(candi,100,["","","","",""])
+                list_pembangunan[0] = index_kosong+1
+                candi[index_kosong] = list_pembangunan
+                # Mengurangi bahan sesuai bahan yang diperlukan
+                bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - pasir
+                bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - batu
+                bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - air
             print("Candi berhasil dibangun.")
             jumlah_candi = hitung_jumlah(candi,100,["","","","",""])
             print(f"Sisa candi yang perlu dibangun: {100-jumlah_candi}\n")
@@ -189,22 +192,24 @@ def batchbangun(users,candi,bahan_bangunan,seed):
             matriks_pembangunan[index_kosong] = list_pembangunan
     if jumlah_jin_pembangun != 0: # Apabila terdapat jin pembangun pada users
         for i in range(jumlah_jin_pembangun):
-            # Mencari total bahan yang diperlukan untuk semua candi
+            # Menghitung total bahan yang diperlukan untuk semua candi
             total_pasir += int(matriks_pembangunan[i][2])
             total_batu += int(matriks_pembangunan[i][3])
             total_air += int(matriks_pembangunan[i][4])
         print(f"Mengerahkan {jumlah_jin_pembangun} jin untuk membangun candi dengan total bahan {total_pasir} pasir, {total_batu} batu, {total_air} air.")
         is_bahan_cukup = cek_kecukupan_bahan(bahan_bangunan,total_pasir,total_batu,total_air)
         if is_bahan_cukup: # Apabila bahan cukup
+            # Mengurangi bahan sesuai bahan yang diperlukan
             bahan_bangunan[0][2] = int(bahan_bangunan[0][2]) - total_pasir
             bahan_bangunan[1][2] = int(bahan_bangunan[1][2]) - total_batu
             bahan_bangunan[2][2] = int(bahan_bangunan[2][2]) - total_air
-            for i in range(cari_index_kosong(matriks_pembangunan,100,["","","","",""])):
+            for i in range(cari_index_kosong(matriks_pembangunan,100,["","","","",""])): # Mengisi indeks matriks_pembangunan agar sesuai dengan ID candi
                 index_kosong = cari_index_kosong(candi,100,["","","","",""])
                 matriks_pembangunan[i][0] = index_kosong+1 
                 candi[index_kosong] = matriks_pembangunan[i]
             print(f"Jin berhasil membangun total {jumlah_jin_pembangun} candi.\n")
         else:
+            # Intinya agar output menjadi bagus dan mengakomodasi berbagai situasi
             string_pasir = f'{ total_pasir - int(bahan_bangunan[0][2])} pasir' if int(bahan_bangunan[0][2]) < total_pasir else ""
             string_batu = f'{total_batu - int(bahan_bangunan[1][2])} batu' if int(bahan_bangunan[1][2]) < total_batu else ""
             string_air = f'{total_air - int(bahan_bangunan[2][2])} air' if int(bahan_bangunan[2][2]) < total_air else ""
@@ -228,13 +233,14 @@ def batchbangun(users,candi,bahan_bangunan,seed):
                 else:
                     if string_air != "":
                         string_akhir = f'Kurang {string_air}.'
-            print(string_akhir,"\n")
+            print("Bangun gagal. ",string_akhir,"\n")
     else:
         print("Bangun gagal. Anda tidak punya jin pembangun. Silahkan summon terlebih dahulu.\n")
     return seed,candi,bahan_bangunan
 
 #F09
 def laporanjin(users,candi,bahan_bangunan):
+    # Mencari berbagai nilai yang perlu di output pada laporan jin 
     jumlah_jin = hitung_jumlah(users,102,["","",""])-2
     jumlah_jin_pengumpul = hitung_jumlah(users,102,["","",""],"Jin Pengumpul",2)
     jumlah_jin_pembangun = hitung_jumlah(users,102,["","",""],"Jin Pembangun",2)
@@ -243,6 +249,7 @@ def laporanjin(users,candi,bahan_bangunan):
     total_pasir = bahan_bangunan[0][2]
     total_batu = bahan_bangunan[1][2]
     total_air = bahan_bangunan[2][2]
+    # Mengoutput nilai yang telah di cari
     print(f"\nTotal Jin: {jumlah_jin}")
     print(f"Total Jin Pengumpul: {jumlah_jin_pengumpul}")
     print(f"Total Jin Pembangun: {jumlah_jin_pembangun}")
@@ -258,24 +265,25 @@ def laporancandi(candi):
     total_pasir_digunakan = 0
     total_batu_digunakan = 0
     total_air_digunakan = 0
-    for i in range(100):
+    for i in range(100): # Mencari jumlah total masing-masing bahan yang telah dipakai membangun candi
         if candi[i] != ["","","","",""]:
             total_pasir_digunakan += int(candi[i][2])
             total_batu_digunakan += int(candi[i][3])
             total_air_digunakan += int(candi[i][4])
-    list_harga_candi = generate_list_harga_candi(candi,jumlah_candi)
+    list_harga_candi = generate_list_harga_candi(candi,jumlah_candi) # List harga candi per ID candi
     print(f"\nTotal Candi: {jumlah_candi}")
     print(f"Total Pasir yang digunakan: {total_pasir_digunakan}")
     print(f"Total Batu yang digunakan: {total_batu_digunakan}")
     print(f"Total Air yang digunakan: {total_air_digunakan}")
     if list_harga_candi != ["",0]:
+        # Mencari nilai max dan min pada list harga candi
         id_candi_termahal = cari_index_maxmin(list_harga_candi,100,"max")+1 # karena dimulai dari 1
         id_candi_termurah = cari_index_maxmin(list_harga_candi,100,"min")+1 # karena dimulai dari 1
         harga_termahal = list_harga_candi[id_candi_termahal-1][1]
         harga_termurah = list_harga_candi[id_candi_termurah-1][1]
         print(f"ID Candi Termahal: {id_candi_termahal} (Rp {harga_termahal})")
         print(f"ID Candi Termurah: {id_candi_termurah} (Rp {harga_termurah})\n")
-    else:
+    else: # Apabila list harga candi kosong
         print(f"ID Candi Termahal: -")
         print(f"ID Candi Termurah: -\n")
 
@@ -284,66 +292,71 @@ def hancurkancandi(candi):
     ID_candi = input("Masukkan ID candi: ")
     konfirmasi = input(f"Apakah anda yakin ingin menghancurkan candi ID: {ID_candi} (Y/N)? ")
     if konfirmasi == "Y":
-        for i in range(100):
+        for i in range(100): # Mengubah entry candi dengan indeks sama dengan ID_candi yang dihancurkan dengan nilai ["","","","",""] (dihapus) 
             if candi[i][0] == ID_candi:
                 candi[i] = ["","","","",""]
-                print("\nCandi telah berhasil dihancurkan.")
+                print("\nCandi telah berhasil dihancurkan.\n")
                 return candi
-        print("Tidak ada candi dengan ID tersebut.")
+        # Apabila tidak ada candi dengan indeks sama dengan ID_candi yang diberikan
+        print("Tidak ada candi dengan ID tersebut.\n")
         return candi
-    elif konfirmasi == "N":
-        print("Penghancuran candi dibatalkan.")
-    else:
-        print("Perintah tidak dikenali. Penghancuran candi dibatalkan.")
+    elif konfirmasi == "N": # Pembatalan oleh user
+        print("Penghancuran candi dibatalkan.\n")
+    else: # Input konfirmasi tidak dikenali (bukan Y atau N)
+        print("Perintah tidak dikenali. Penghancuran candi dibatalkan.\n")
 
 #F12
 def ayamberkokok(candi):
     print("Kukuruyuk.. Kukuruyuk..")
     jumlah_candi = hitung_jumlah(candi,100,["","","","",""])
     print(f"\nJumlah candi: {jumlah_candi}")
-    if jumlah_candi < 100:
+    if jumlah_candi < 100: # Apabila candi < 100 maka Roro Jonggrang menang
         print("\nSelamat, Roro Jonggrang memenangkan permainan!")
         print("\n*Bandung Bondowoso angry noise*")
         print("Roro Jonggrang dikutuk menjadi candi.\n")
-        sys.exit(1)
-    else:
+        sys.exit(1) # Keluar program
+    else: # Apabila terdapat 100 candi
         print("\nYah, Bandung Bondowoso memenangkan permainan!\n")
-        sys.exit(1)
+        sys.exit(1) # Keluar program
 
 #F13
 def load(users,candi,bahan_bangunan):
     parser = argparse.ArgumentParser(usage="python main.py <nama_folder>") 
     parser.add_argument("path")
-    if len(sys.argv)==1:
+    if len(sys.argv)==1: # Apabila tidak ada argumen folder yang diberikan
         print("Tidak ada nama folder yang diberikan!")
-        sys.exit(1)
+        sys.exit(1) # Keluar dari program
     args=parser.parse_args()
 
-    if os.path.exists(args.path):  
+    if os.path.exists(args.path): # Apabila path folder yang diberikan ada
         print("\nLoading...")
+        # Mengubah file csv menjadi list yang bisa digunakan selama program berjalan
         users=csv_toarray(users,f"{args.path}\\user.csv",separator=';')
         candi=perbaikan_numerasi(csv_toarray(candi,f"{args.path}\\candi.csv",separator=';'))
         bahan_bangunan=csv_toarray(bahan_bangunan,f"{args.path}/bahan_bangunan.csv",separator=';')
         print("Selamat datang di program “Manajerial Candi”")
         print("Silahkan masukkan username Anda\n") 
         return users,candi,bahan_bangunan
-    else:
+    else: # Ketika path folder yang diberikan tidak ditemukan
         print(f"Folder “{args.path}” tidak ditemukan.")
-        sys.exit(1)
+        sys.exit(1) # Keluar dari program
 
 #F14
 def save(file,panjang_file,panjang_sub_item,folder,filename):
-    if 'save' not in os.listdir():
-        os.mkdir('save')
-    if folder not in os.listdir('save\\'):
+    if 'save' not in os.listdir(): # Apabila save tidak ditemukan pada directory maka dibuat
+        print(f"Membuat folder save")
+        os.mkdir('save') 
+    if folder not in os.listdir('save\\'): # Apabila nama folder tidak terdapat dalam folder save maka dibuat
+        print(f"Membuat folder save/{folder}...")
         os.mkdir(f'save\\{folder}')
-    f = open(f'save\\{folder}\\{filename}', 'w')
-    if panjang_file == 102:
-        f.write("username;password;role\n")
-    elif panjang_file == 100:
+    f = open(f'save\\{folder}\\{filename}', 'w') # Membuka file tempat penyimpanan
+    if panjang_file == 102: # Apabila matriks users maka tuliskan header users
+        f.write("username;password;role\n") 
+    elif panjang_file == 100: # Apabila matriks candi maka tuliskan header candi
         f.write("id;pembuat;pasir;batu;air\n")
-    elif panjang_file == 3:
+    elif panjang_file == 3: # Apabila matriks bahan_bangunan maka tuliskan header bahan_bangunan
         f.write("nama;deskripsi;jumlah\n")
+    # Mengubah setiap anggota matriks menjadi line di csv yang tiap elemennya dipisahkan ;    
     for i in range(panjang_file):
         kosong = False
         for j in range(panjang_sub_item):
@@ -355,8 +368,8 @@ def save(file,panjang_file,panjang_sub_item,folder,filename):
             else:
                 f.write(f'{file[i][j]}')
         if i != panjang_file-1 and not kosong:
-            f.write('\n')    
-    f.close()
+            f.write('\n')   
+    f.close() # Menutup file
 
 #F15
 def help(role):
@@ -386,5 +399,14 @@ def help(role):
     print("")
 
 #F16
-def exit():
-    sys.exit(1)
+def exit(users,candi,bahan_bangunan):
+    konfirmasi = input("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ")
+    while konfirmasi != "Y" and konfirmasi != "y" and konfirmasi != "N" and konfirmasi != "n": # Selama konfirmasi belum valid maka akan terus ditanya sampai valid
+        konfirmasi = input("Apakah Anda mau melakukan penyimpanan file yang sudah diubah? (y/n) ")
+    if konfirmasi == "Y" or konfirmasi == "y": # Apabila di konfirmasi maka akan dilakukan prosedur save
+        folder = input('Masukan nama folder: ')
+        print("Saving...")
+        save(users,102,3,folder,'user.csv')
+        save(candi,100,5,folder,'candi.csv')
+        save(bahan_bangunan,3,3,folder,'bahan_bangunan.csv')
+    sys.exit(1) # Keluar dari program
